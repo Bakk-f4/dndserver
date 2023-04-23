@@ -1,4 +1,5 @@
 from dndserver.protos import _Item_pb2 as item
+from dndserver.protos import CharacterClass_pb2 as cc
 
 
 class Item():
@@ -30,6 +31,16 @@ class Item():
             new_prop.propertyTypeId = prop[0]
             new_prop.propertyValue = prop[1]
             new_item.primaryPropertyArray.append(new_prop)
+
+def move_info():
+    
+    moveinfo = cc.SCLASS_MOVE_INFO(index=1, type=2, moveId="2", move=1)
+    return moveinfo
+
+def new_move_info():
+    
+    moveinfo = cc.SCLASS_MOVE_INFO(index=1, type=2, moveId="1", move=2)
+    return moveinfo
 
 
 def generate_torch():
@@ -187,15 +198,15 @@ def generate_helm():
 
 def generate_reckless():
     skills = item.SSkill()
-    skills.index = 1
+    skills.index = 2
     skills.skillId = "DesignDataSkill:Id_Skill_RecklessAttack"
     return skills
 
 
 def generate_adrenaline():
     skills = item.SSkill()
-    skills.index = 2
-    skills.skillId = "DesignDataSkill:Id_Skill_AdenalineRush"
+    skills.index = 1
+    skills.skillId = "DesignDataSkill:Id_Skill_AdrenalineRush"
     return skills
 
 
@@ -204,3 +215,4 @@ def generate_two_hander():
     skills.index = 1
     skills.perkId = "DesignDataPerk:Id_Perk_TwoHander"
     return skills
+

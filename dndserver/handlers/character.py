@@ -4,8 +4,9 @@ import time
 from dndserver import database
 from dndserver.objects import items
 from dndserver.protos import (Account_pb2 as acc, _Character_pb2 as char,
+                              CharacterClass_pb2 as cc,
                               _Defins_pb2 as df, Lobby_pb2 as lb,
-                              _PacketCommand_pb2 as pc)
+                              _PacketCommand_pb2 as pc, _Item_pb2 as item)
 
 
 def list_characters(ctx, req):
@@ -48,7 +49,6 @@ def list_characters(ctx, req):
     res.totalCharacterCount = len(results)
 
     return res
-
 
 def create_character(ctx, req):
     """Communication that occurs when the user attempts to create a new
@@ -138,4 +138,53 @@ def character_info(ctx):
     char_info.CharacterItemList.append(items.generate_bandage())
 
     res.characterDataBase.CopyFrom(char_info)
+    return res
+
+
+def character_equip(ctx):
+    """Communication that occurs when the user loads into the lobby/tavern.
+    Sends the game the relevant character information to be rendered in-game."""
+    equip = cc.SCLASS_EQUIP_INFO(
+    index=1,
+    isAvailableSlot=1,
+    requiredLevel=1,
+    type=1,
+    equipId="1")
+
+    res = cc.SS2C_CLASS_EQUIP_INFO_RES(equips=[equip])
+    return res
+
+
+def character_level(ctx):
+    """Communication that occurs when the user loads into the lobby/tavern.
+    Sends the game the relevant character information to be rendered in-game."""
+
+    res = cc.SS2C_CLASS_LEVEL_INFO_RES(
+        level=5, exp=1500, expBegin=1000, expLimit=2000, rewardPoint=1500)
+    return res
+
+def character_perks(ctx):
+    """Communication that occurs when the user loads into the lobby/tavern.
+    Sends the game the relevant character information to be rendered in-game."""
+    res = cc.SS2C_CLASS_PERK_LIST_RES()
+    res.perks.append(items.generate_two_hander())
+    return res
+
+def character_skills(ctx):
+    """Communication that occurs when the user loads into the lobby/tavern.
+    Sends the game the relevant character information to be rendered in-game."""
+    res = cc.SS2C_CLASS_SKILL_LIST_RES()
+    res.skills.append(items.generate_reckless())
+    res.skills.append(items.generate_adrenaline())
+    
+    return res
+
+def move_object(ctx):
+    """Communication that occurs when the user loads into the lobby/tavern.
+    Sends the game the relevant character information to be rendered in-game."""
+    res = cc.SS2C_CLASS_ITEM_MOVE_RES()
+    res.result = 2
+    res.oldMove.append(items.move_info())
+    res.newMove.append(items.new_move_info())
+    
     return res
